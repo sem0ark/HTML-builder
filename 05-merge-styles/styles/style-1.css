@@ -13,11 +13,7 @@ body {
 }
 
 body {
-  font:
-    normal 1em/1.45em 'Helvetica Neue',
-    Helvetica,
-    Arial,
-    sans-serif;
+  font: normal 1em/1.45em 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   color: #fff;
   background: radial-gradient(ellipse at bottom, #1c2837 0%, #050608 100%);
@@ -38,8 +34,7 @@ body {
   width: 2px;
   top: -2px;
   background: white;
-  box-shadow:
-    1617px 304px 0 0px rgba(255, 255, 255, 0.047),
+  box-shadow: 1617px 304px 0 0px rgba(255, 255, 255, 0.047),
     1067px 357px 0 0px rgba(255, 255, 255, 0.469),
     120px 1700px 0 0px rgba(255, 255, 255, 0.28),
     616px 1672px 0 0px rgba(255, 255, 255, 0.581),

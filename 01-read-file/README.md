@@ -10,10 +10,10 @@ In the file `index.js` within the directory `01-read-file`, develop a script tha
 
 ### Requirements
 
-- [ ] Inside the folder `01-read-file`, there are 2 files, `index.js` and `text.txt`.
-- [ ] When executing the command `node 01-read-file` <u>in the root directory of the repository</u>, the contents of the file `text.txt` should be printed to the console.
-- [ ] Synchronous file reading methods should not be used in the code.
-- [ ] File reading should occur using **ReadStream**.
+- [x] Inside the folder `01-read-file`, there are 2 files, `index.js` and `text.txt`.
+- [x] When executing the command `node 01-read-file` <u>in the root directory of the repository</u>, the contents of the file `text.txt` should be printed to the console.
+- [x] Synchronous file reading methods should not be used in the code.
+- [x] File reading should occur using **ReadStream**.
 
 ### Objectives
 
