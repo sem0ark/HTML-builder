@@ -24,6 +24,7 @@ async function* walk(dir, yieldDir = false) {
   }
 }
 
+// modified https://stackoverflow.com/questions/16431163/concatenate-two-or-n-streams
 function merge(streams) {
   let pass = new PassThrough();
 
@@ -35,22 +36,18 @@ function merge(streams) {
 }
 
 async function copyFolder(from, to) {
-  console.log('Copying', from, to);
-
   try {
-    console.log('removing', to);
-    await fs.promises.rmdir(to, { recursive: true, force: true });
+    await fs.promises.rm(to, { recursive: true, force: true });
   } finally {
-    console.log('making', to);
     await fs.promises.mkdir(to);
   }
 
   for await (const p of walk(from, true)) {
-    console.log('checking', p);
     const s = await fs.promises.stat(p);
 
-    if (s.isDirectory()) fs.promises.mkdir(p.replace(from, to));
-    else {
+    if (s.isDirectory()) {
+      await fs.promises.mkdir(p.replace(from, to));
+    } else {
       fs.createReadStream(p).pipe(
         fs.createWriteStream(path.join(to, path.basename(p))),
       );
@@ -74,7 +71,7 @@ async function prepareHTML(template, components, to) {
     if (path.extname(p) === '.html')
       componentContents.set(
         path.basename(p),
-        await fs.promises.readFile(p, 'utf-8'),
+        await fs.promises.readFile(p, 'utf-8'), // blocking for simplicity, assuming the user uses all the components for the resulting file
       );
 
   await fs.promises.writeFile(
@@ -89,7 +86,7 @@ async function bundle() {
   const result_folder = distPath();
 
   try {
-    await fs.promises.rmdir(result_folder, { recursive: true, force: true });
+    await fs.promises.rm(result_folder, { recursive: true, force: true });
   } finally {
     await fs.promises.mkdir(result_folder);
 
@@ -100,7 +97,7 @@ async function bundle() {
         distPath('index.html'),
       ),
       bundleCSS(localPath('styles'), distPath('style.css')),
-      // copyFolder(localPath('assets'), distPath('assets')),
+      copyFolder(localPath('assets'), distPath('assets')),
     ]);
   }
 }
