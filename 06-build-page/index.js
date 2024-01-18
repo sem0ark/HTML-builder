@@ -18,6 +18,8 @@ async function* walk(dir, yieldDir = false) {
     if (d.isDirectory()) {
       if (yieldDir) yield p;
       yield* walk(p);
+    } else if (d.isFile()) {
+      yield p;
     }
   }
 }
@@ -33,15 +35,21 @@ function merge(streams) {
 }
 
 async function copyFolder(from, to) {
+  console.log('Copying', from, to);
+
   try {
+    console.log('removing', to);
     await fs.promises.rmdir(to, { recursive: true, force: true });
   } finally {
+    console.log('making', to);
     await fs.promises.mkdir(to);
   }
 
   for await (const p of walk(from, true)) {
+    console.log('checking', p);
     const s = await fs.promises.stat(p);
-    if (s.isDirectory()) fs.promises.mkdir(p);
+
+    if (s.isDirectory()) fs.promises.mkdir(p.replace(from, to));
     else {
       fs.createReadStream(p).pipe(
         fs.createWriteStream(path.join(to, path.basename(p))),
@@ -53,33 +61,32 @@ async function copyFolder(from, to) {
 async function bundleCSS(from, to) {
   const paths = [];
 
-  for await (const p of walk(from))
-    if (path.extname(p) === '.css') paths.push(fs.createReadStream(p));
+  for await (const p of walk(from)) paths.push(fs.createReadStream(p));
 
-  merge(paths).pipe(fs.createWriteStream(to));
+  await fs.promises.writeFile(to, merge(paths));
 }
 
 async function prepareHTML(template, components, to) {
-  const contents = await fs.promises.readFile(template);
+  const contents = await fs.promises.readFile(template, 'utf-8');
   const componentContents = new Map();
 
   for await (const p of walk(components))
     if (path.extname(p) === '.html')
-      componentContents[path.basename(p)] = fs.promises.readFile(p);
-
-  await Promise.all(componentContents.values());
+      componentContents.set(
+        path.basename(p),
+        await fs.promises.readFile(p, 'utf-8'),
+      );
 
   await fs.promises.writeFile(
     to,
-    contents.replace(
-      /\{\{[a-zA-Z]\}\}/,
-      (match, capture) => componentContents[capture],
+    contents.replaceAll(/\{\{([a-zA-Z]+)\}\}/g, (match, capture) =>
+      componentContents.get(capture + '.html'),
     ),
   );
 }
 
 async function bundle() {
-  const result_folder = distPath('');
+  const result_folder = distPath();
 
   try {
     await fs.promises.rmdir(result_folder, { recursive: true, force: true });
@@ -93,7 +100,7 @@ async function bundle() {
         distPath('index.html'),
       ),
       bundleCSS(localPath('styles'), distPath('style.css')),
-      copyFolder(localPath('assets'), distPath('project-dist', 'assets')),
+      // copyFolder(localPath('assets'), distPath('assets')),
     ]);
   }
 }
