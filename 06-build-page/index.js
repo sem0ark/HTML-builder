@@ -3,7 +3,7 @@ const path = require('path');
 const { PassThrough } = require('stream');
 
 function localPath(...ps) {
-  return path.join(__dirname, 'test-files', ...ps);
+  return path.join(__dirname, ...ps);
 }
 
 function distPath(...ps) {
@@ -44,13 +44,12 @@ async function copyFolder(from, to) {
 
   for await (const p of walk(from, true)) {
     const s = await fs.promises.stat(p);
+    const destination = p.replace(from, to);
 
     if (s.isDirectory()) {
-      await fs.promises.mkdir(p.replace(from, to));
+      await fs.promises.mkdir(destination);
     } else {
-      fs.createReadStream(p).pipe(
-        fs.createWriteStream(path.join(to, path.basename(p))),
-      );
+      fs.createReadStream(p).pipe(fs.createWriteStream(destination));
     }
   }
 }
