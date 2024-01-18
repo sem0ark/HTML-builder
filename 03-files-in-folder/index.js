@@ -21,5 +21,5 @@ walk(path.join(__dirname, 'secret-folder'), (p, s) => {
   const ext = splitted.pop();
   const name = splitted.join('.');
 
-  console.log(`"${name}" - "${ext}" - ${(s.size / 1024).toPrecision(3)}kB`);
+  console.log(`"${name}" - "${ext}" - ${(s.size / 1024).toFixed(3)}kB`);
 });

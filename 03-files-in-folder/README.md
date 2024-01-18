@@ -4,12 +4,12 @@ In the `index.js` file of the `03-files-in-folder` directory, develop a script t
 
 ### Requirements
 
-- [ ] When executing the command `node 03-files-in-folder` <u>in the root directory of the repository</u>, information about files contained directly within `03-files-in-folder/secret-folder` should be displayed in the console.  
+- [x] When executing the command `node 03-files-in-folder` <u>in the root directory of the repository</u>, information about files contained directly within `03-files-in-folder/secret-folder` should be displayed in the console.  
        The data should be presented in the format `<file name>-<file extension>-<file size>`.  
        Example: `example - txt - 128.369kb`.
       _Note: no rounding for file size is necessary; conversion to kB is optional!_
 
-- [ ] Information should only be displayed for files located in `03-files-in-folder/secret-folder`. The presence of information about directories is considered an error.
+- [x] Information should only be displayed for files located in `03-files-in-folder/secret-folder`. The presence of information about directories is considered an error.
 
 ### Objectives
 
