@@ -12,7 +12,7 @@ function walk(dir, cb_file, cb_dir) {
     if (e) throw e;
     files.forEach((f) => {
       const p = path.join(dir, f);
-      console.log(p);
+      // console.log(p);
 
       fs.stat(getAbsFrom(p), (e, s) => {
         if (s.isDirectory()) {
