@@ -8,8 +8,12 @@ function walk(dir, cb) {
       const p = path.join(dir, f);
 
       fs.stat(p, (e, s) => {
-        if (s.isDirectory()) walk(p, cb);
-        else if (s.isFile()) cb(p, s);
+        // As I understood we should look for the files *only* in the "secret-folder"
+        // not display information *about only files* in the "secret-folder".
+
+        // if (s.isDirectory()) walk(p, cb);
+        // else
+        if (s.isFile()) cb(p, s);
       });
     });
   });
